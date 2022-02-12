@@ -102,11 +102,27 @@
   - name: Unzip WordPress
     unarchive: src=/tmp/wordpress.zip dest=/tmp copy=no creates=/tmp/wordpress/wp-settings.php
 
+  # - name: Remover apache2
+  #   command: apt remove apache2
+  
+  # - name: Remover /var/www/html
+  #   command: rm -r /var/www/html
+
   - name: Copy WordPress
-    command: cp -r /tmp/wordpress/. /var/www/book.example.com/
+    command: cp -r /tmp/wordpress/. /var/www/html/
 
   - name: Create backup
     template: src=templates/mysql/backup.sql dest=/tmp/backup.sql
+
+
+
+  - name: Create WordPress MySQL database
+    mysql_db: name=wpbd state=present
+
+  - name: Does the database exist?
+    command: mysql -u root wpbd -e "SELECT ID FROM wpbd.wp_users LIMIT 1;"
+    register: db_exist
+    ignore_errors: true
 
   - name: Create WordPress MySQL database
     mysql_db: name=wpbd state=import target=/tmp/backup.sql
@@ -122,7 +138,7 @@
     template: src=templates/nginx/book.example.com dest=/etc/nginx/sites-available/book.example.com
 
   - name: Create link /etc/nginx/sites-available/book.example.com APUNTADO POR /etc/nginx/sites-enabled/book.example.com
-    file: src=/etc/nginx/sites-available/book.example.com dest=/etc/nginx/sites-enabled/book.example.com state=link
+    file: src=/etc/nginx/sites-available/book.example.com dest=/etc/nginx/sites-enabled/default state=link
     notify: restart nginx
   
 
