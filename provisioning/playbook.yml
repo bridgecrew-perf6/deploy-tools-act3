@@ -96,8 +96,8 @@
     loop: 
     - unzip
 
-  - name: Create project folder
-    file: dest=/var/www/book.example.com state=directory
+  # - name: Create project folder
+  #   file: dest=/var/www/book.example.com state=directory
 
   - name: Unzip WordPress
     unarchive: src=/tmp/wordpress.zip dest=/tmp copy=no creates=/tmp/wordpress/wp-settings.php
@@ -132,14 +132,17 @@
     mysql_user: name=wp host=localhost password=00wp123456 priv=wpbd.*:ALL
 
   - name: Create wp-config
-    template: src=templates/wordpress/wp-config.php dest=/var/www/book.example.com/wp-config.php
+    template: src=templates/wordpress/wp-config.php dest=/var/www/html/wp-config.php
 
+  # - name: Create nginx config
+  #   template: src=templates/nginx/book.example.com dest=/etc/nginx/sites-available/book.example.com
   - name: Create nginx config
-    template: src=templates/nginx/book.example.com dest=/etc/nginx/sites-available/book.example.com
-
-  - name: Create link /etc/nginx/sites-available/book.example.com APUNTADO POR /etc/nginx/sites-enabled/book.example.com
-    file: src=/etc/nginx/sites-available/book.example.com dest=/etc/nginx/sites-enabled/default state=link
+    template: src=templates/nginx/default dest=/etc/nginx/sites-available/default
     notify: restart nginx
+
+  # - name: Create link /etc/nginx/sites-available/book.example.com APUNTADO POR /etc/nginx/sites-enabled/book.example.com
+  #   file: src=/etc/nginx/sites-available/book.example.com dest=/etc/nginx/sites-enabled/default state=link
+  #   notify: restart nginx
   
 
 

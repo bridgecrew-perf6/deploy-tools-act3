@@ -1,6 +1,6 @@
 server {
          listen 80;
-         root /var/www/book.example.com;
+         root /var/www/html;
          index index.php index.html index.htm index.nginx-debian.html;
          server_name book.example.com;
 
